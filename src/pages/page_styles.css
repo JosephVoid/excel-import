@@ -1,0 +1,27 @@
+.title {
+  text-align: center;
+  border-bottom: 1px solid rgba(197, 197, 197, 0.353);
+  padding: 1em;
+}
+
+.main_container {
+  padding: 1em 10em;
+  background-color: #ececec;
+  min-height: 100vh;
+}
+
+.gen_container {
+  padding: 1em;
+}
+
+.gen_container a {
+  text-decoration: none;
+}
+
+.import_container {
+  display: flex;
+}
+
+.table_control {
+  padding: 0 0 0 4em;
+}
