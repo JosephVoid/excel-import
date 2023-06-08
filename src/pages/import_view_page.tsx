@@ -11,7 +11,7 @@ interface IPage {
   page: "VIEW" | "NEW"
 }
 
-interface IData {
+export interface IData {
   key: React.Key;
   item_no: string;
   item_desc: string;
