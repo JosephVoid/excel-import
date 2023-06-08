@@ -3,9 +3,10 @@ import "./page_styles.css"
 import { PlusOutlined } from "@ant-design/icons"
 import Title from "antd/es/typography/Title"
 import type { ColumnsType } from 'antd/es/table';
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import * as XLSX from "xlsx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { CreateTable, GetTable, UpdateTable } from "../utils/api";
 
 interface IPage {
   page: "VIEW" | "NEW"
@@ -56,10 +57,17 @@ const ImportViewPage = (prop: IPage) => {
   const [uploadState, setUploadState] = useState<"ERR" | "SUC" | "">("")
   const [selectedRowsKeyState, setSelectedRowsKeyState] = useState<React.Key[]>([])
   const [dispalyEditFields, setDisplayEditFields] = useState<boolean>(false)
+  let navigate = useNavigate();
+  let params = useParams();
+
+  useEffect(prop.page === "VIEW" ? () => {     
+    GetTable(params.id as string).then(res => {setTableData(res); setTableTitle(params.id as string)})
+  } : () => console.log(""), [])
 
   /* Handle the selection logic
   ------------------------------------------------  */
   const selectionHandler = (selectedRowKeys: React.Key[], selectedRows: IData[]) => {
+    console.log(selectedRowKeys)
     setSelectedRowsKeyState(selectedRowKeys)
   }
 
@@ -70,6 +78,19 @@ const ImportViewPage = (prop: IPage) => {
     setTableData(local_table_data.filter((row_data) => !selectedRowsKeyState.includes(row_data.key)))
   }
 
+  /* Handle the saving logic
+    ------------------------------------------------  */
+  const saveButtonHandler = () => {
+    if (prop.page === "NEW") {
+      CreateTable(tableData, tableTitle.replace(' ', '_').toLocaleUpperCase()).then(res => {
+        if (res) navigate("/")
+      })
+    } else {
+      UpdateTable(tableData, tableTitle.replace(' ', '_').toLocaleUpperCase()).then(res => {
+        if (res) navigate("/")
+      })
+    }
+  }
   /* Handle the editing of rows
   ------------------------------------------------  */
   const editFieldHandler = (key: React.Key, value: any, field: any) => {
@@ -225,7 +246,7 @@ const ImportViewPage = (prop: IPage) => {
         </Space>
         <br />
         <div style = {{'marginTop':'1em', 'display':'flex', 'justifyContent':'space-between'}}>
-          <Button type="primary">Save</Button>
+          <Button onClick = {() => saveButtonHandler()} type="primary">Save</Button>
           <Link to = {'/'}>
             <Button type="text">Go Back Home</Button>
           </Link>

@@ -5,22 +5,44 @@ const AxiosInstance = axios.create({
   baseURL: process.env.REACT_APP_API_URL,
 })
 
-export const ReqCreateTable = (body: IData[]) => {
-
+export const CreateTable = async (body: IData[], name: string) => {
+  var result = await AxiosInstance.post('/create-table/'+name, body)
+  if (result.status === 200) return true
+  else return false
 }
 
-export const ReqGetTables = () => {
-  
+export const GetTables = async () => {
+  var reponse_array:string[] = [];
+  var result = await AxiosInstance.get('/get-tables')
+  if (result.status === 200) {
+    (result.data).forEach((tb:any) => {
+      reponse_array.push(tb.Tables_in_exceldb)
+    })
+  } 
+  return reponse_array
 }
 
-export const ReqGetTable = (id: string) => {
-  
+export const GetTable = async (id: string) => {
+  var result_data:IData[] = []
+  var result = await AxiosInstance.get('/get-table/'+id)
+  if (result.status === 200) {
+    result_data = result.data as IData[]
+  }
+  return result_data
 }
 
-export const ReqDelTable = (id: string) => {
-  
+export const DeleteTable = (name: string) => {
+  AxiosInstance.post('/delete-table/'+name).then(result => {
+    if (result.status === 200) return true
+    else return false
+  }).catch((err) => {
+    console.log(err)
+    return false
+  })
 }
 
-export const ReqUpdateTable = (body: IData[]) => {
-
+export const UpdateTable = async (body: IData[], name: string) => {
+  var result = await AxiosInstance.put('/update-table/'+name, body)
+  if (result.status === 200) return true
+  else return false
 }
