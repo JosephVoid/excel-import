@@ -59,7 +59,8 @@ const ImportViewPage = (prop: IPage) => {
   const [dispalyEditFields, setDisplayEditFields] = useState<boolean>(false)
   let navigate = useNavigate();
   let params = useParams();
-
+  
+  /* Load the table data from the DB into the UI table */
   useEffect(prop.page === "VIEW" ? () => {     
     GetTable(params.id as string).then(res => {setTableData(res); setTableTitle(params.id as string)})
   } : () => console.log(""), [])
@@ -155,7 +156,7 @@ const ImportViewPage = (prop: IPage) => {
     return true
   }
 
-  /*   Verify if the excel meet the format
+  /*   Maps the values from the work sheet, to IData[] structure
   ------------------------------------------------  */
   const mapToTable = (ws: any[][]):IData[] => {
     let data_array:IData[] = []
@@ -198,7 +199,8 @@ const ImportViewPage = (prop: IPage) => {
       <div className="input_control">
         <Form layout="vertical">
           <Form.Item label="Table Title">
-            <Input placeholder="Table Name" onChange={(e) => setTableTitle(e.target.value)}></Input>
+             {/* Disable the table name change, because this is how it refers to the table */}
+            <Input placeholder="Table Name" onChange={(e) => setTableTitle(e.target.value)} disabled = {prop.page === "VIEW"}></Input>
           </Form.Item>
           <Form.Item label="Upload Excel" valuePropName="fileList">
             <Upload accept=".xlsx" showUploadList={false} beforeUpload={(file:any) => handleFileUpload(file)}>

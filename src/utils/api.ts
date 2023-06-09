@@ -1,6 +1,8 @@
 import axios from "axios";
 import { IData } from "../pages/import_view_page";
 
+/* API ABSRACTIONS */
+
 const AxiosInstance = axios.create({
   baseURL: process.env.REACT_APP_API_URL,
 })
@@ -31,14 +33,10 @@ export const GetTable = async (id: string) => {
   return result_data
 }
 
-export const DeleteTable = (name: string) => {
-  AxiosInstance.post('/delete-table/'+name).then(result => {
-    if (result.status === 200) return true
-    else return false
-  }).catch((err) => {
-    console.log(err)
-    return false
-  })
+export const DeleteTable = async (name: string) => {
+  var result = await AxiosInstance.delete('/delete-table/'+name)
+  if (result.status === 200) return true
+  else return false
 }
 
 export const UpdateTable = async (body: IData[], name: string) => {
